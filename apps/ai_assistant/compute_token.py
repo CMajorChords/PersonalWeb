@@ -85,7 +85,7 @@ def compute_token_price(messages, model):
             st.toast(f"{str_output_token}{output_tokens}", icon="🪙")
             st.toast(f"**{str_token_price}{token_price:.3f}$**", icon="🪙")
         else:
-            st.toast(f"{str_prompt_token} 0", icon="🪙")
+            st.toast(f"**{str_prompt_token}0$**", icon="🪙")
             st.toast(f"{str_output_token} 0", icon="🪙")
             st.toast(f"{str_token_price} 0", icon="🪙")
 

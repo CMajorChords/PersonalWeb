@@ -26,7 +26,7 @@ else:
 client = OpenAI(
     api_key=st.secrets["OPENAI_API_KEY_PAYED"] if authentication else st.secrets["OPENAI_API_KEY_FREE"],
     # api_key="sk-o09TBraPT6eTfvLVNewzXpGDxCyHfhBTrlpTz54lB4IBqKM8",
-    base_url="https://api.chatanywhere.com.cn",  # https://api.chatanywhere.cn/v1https://api.chatanywhere.com.cn
+    base_url="https://api.chatanywhere.cn",  # https://api.chatanywhere.cn/v1https://api.chatanywhere.com.cn
 )
 # UI基础
 write_saying("ai_assistant")
