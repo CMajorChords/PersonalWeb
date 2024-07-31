@@ -85,9 +85,9 @@ def compute_token_price(messages, model):
             st.toast(f"{str_output_token}{output_tokens}", icon="🪙")
             st.toast(f"**{str_token_price}{token_price:.3f}$**", icon="🪙")
         else:
-            st.toast(f"**{str_prompt_token}0$**", icon="🪙")
+            st.toast(f"{str_prompt_token}0", icon="🪙")
             st.toast(f"{str_output_token} 0", icon="🪙")
-            st.toast(f"{str_token_price} 0", icon="🪙")
+            st.toast(f"**{str_token_price} 0$**", icon="🪙")
 
     # gpt-3.5-turbo-ca	0.001 / 1K Tokens	0.003 / 1K Tokens	支持	Azure openai中转(也属于官方模型的一种)价格便宜, 但是回复的慢一些
     # gpt-3.5-turbo	0.0035 / 1K Tokens	0.0105 / 1K Tokens	支持	默认模型，等于gpt-3.5-turbo-0125
