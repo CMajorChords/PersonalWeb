@@ -1,0 +1,3 @@
+我是一个:orange-background[水文学]专业的研究生，研究方向为:orange-background[径流预报]。主要兴趣是利用传统水文模型（特别是:orange-background[土壤含水量显式计算模型]）和:orange-background[深度学习]模型联合建模。研究内容包括在神经网络中嵌入水文过程的先验知识，开发适用于径流模拟的专用网络结构和网络训练方式。具体而言，包括使用神经网络解决洪水预报中的:orange-background[突变]问题、:orange-background[提升预见期]、实现:orange-background[无资料地区径流预报]。
+
+本网站包含:red-background[博客]、:red-background[工具]两个板块。在博客中，:red-background[研究进展]将不定期更新:orange-background[研究代码]或:orange-background[阅读笔记]，:red-background[技术笔记]包含一些与科研不直接相关但又比较重要的事情，例如python环境配置、ubuntu系统安装等。:red-background[工具]板块中，:red-background[AI助手]支持和GPT4o、GPT4o mini等一批最先进的LLM模型进行对话、查看文献等操作，:red-background[数据分析]包含数据可视化、插值等特征工程。:red-background[水文模型]则提供了一批传统水文模型、深度学习模型等的率定和检验。

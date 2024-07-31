@@ -1,0 +1,12 @@
+openai
+pandas
+streamlit
+altair
+numpy
+torch
+scikit-learn
+openpyxl
+PyPDF2
+docx
+markdown2
+tiktoken
