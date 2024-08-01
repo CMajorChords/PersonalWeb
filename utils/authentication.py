@@ -2,6 +2,7 @@ import streamlit as st
 import hmac
 
 
+# 计算本函数用
 def check_password(text_label_zn: str = "密码", text_label_en: str = "Password") -> bool:
     """Returns `True` if the user had the correct password."""
 
@@ -34,10 +35,3 @@ def check_password(text_label_zn: str = "密码", text_label_en: str = "Password
             if "password_correct" in st.session_state:
                 st.warning("😕Incorrect password")
         return False
-
-
-def quit_authentication():
-    """Quits the authentication process."""
-
-    def quit():
-        st.session_state["password_correct"] = False

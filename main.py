@@ -18,7 +18,7 @@ if "language" not in st.session_state:
 # pages
 if st.session_state["language"] == "中文":
     page_home = st.Page("apps/home.py", title="fun💤", default=True)
-    page_research_progress = st.Page("apps/research_progress.py", title="研究进展")
+    page_research_progress = st.Page("apps/research_progress/research_progress.py", title="研究进展")
     page_technical_notes = st.Page("apps/technical_notes.py", title="技术笔记")
     page_ai_assistant = st.Page("apps/ai_assistant/ai_assistant.py", title="AI助手")
     page_data_analysis = st.Page("apps/data_analysis.py", title="数据分析")
@@ -29,7 +29,7 @@ if st.session_state["language"] == "中文":
              }
 else:
     page_home = st.Page("apps/home.py", title="fun💤", icon="🏠", default=True)
-    page_research_progress = st.Page("apps/research_progress.py", title="Research Progress")
+    page_research_progress = st.Page("apps/research_progress/research_progress.py", title="Research Progress")
     page_technical_notes = st.Page("apps/technical_notes.py", title="Technical Notes")
     page_ai_assistant = st.Page("apps/ai_assistant/ai_assistant.py", title="AI Assistant")
     page_data_analysis = st.Page("apps/data_analysis.py", title="Data Analysis")

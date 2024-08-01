@@ -1,0 +1,3 @@
+from apps.ai_assistant.process_messages.process_file_messages import process_document_message, process_image_message
+from apps.ai_assistant.process_messages.process_prompt_messages import process_template_message
+from apps.ai_assistant.process_messages.manage_context import clear_chat_history

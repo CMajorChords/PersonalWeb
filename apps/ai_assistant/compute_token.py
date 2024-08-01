@@ -52,6 +52,7 @@ def count_prompt_output_token(messages, model):
         except:
             pass
     output_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
+    # TODO: 这里应该加一个照片的计费
     return prompt_tokens, output_tokens
 
 

@@ -4,7 +4,9 @@ import base64
 import docx
 import markdown2
 from PyPDF2 import PdfReader
+import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
+from PIL import Image
 
 
 # 清理文本函数
@@ -75,6 +77,7 @@ def extract_text_from_pdf(file: UploadedFile) -> str:
     return clean_text(text)
 
 
+@st.cache_data(show_spinner="Extracting text...")
 def extract_text(file: UploadedFile) -> (str, str):
     """
     提取文本文件
@@ -104,10 +107,13 @@ def extract_text(file: UploadedFile) -> (str, str):
 #     else:
 #         return [extract_text_from_single_file(files)], [files.name]
 
-def extract_image(file: UploadedFile) -> str:
+@st.cache_data(show_spinner="Extracting image...")
+def extract_image(file: UploadedFile) -> [str, Image.Image]:
     """
     提取图片文件
     :param file: 文件本身，而非文件路径
-    :return: base64编码的图片和文件名称
+    :return: base64编码的图片和转化为PIL.Image实例的图片
     """
-    return base64.b64encode(file.read()).decode("utf-8")
+    image_base64 = base64.b64encode(file.read()).decode("utf-8")
+    image_pil = Image.open(file)
+    return image_base64, image_pil

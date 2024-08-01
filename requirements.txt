@@ -3,8 +3,10 @@ pandas
 streamlit
 altair
 numpy
-openpyxl
 PyPDF2
-python-docx
 markdown2
 tiktoken
+docx
+Pillow
+torch
+scikit-learn
