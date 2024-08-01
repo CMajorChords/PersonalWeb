@@ -6,7 +6,7 @@ numpy
 PyPDF2
 markdown2
 tiktoken
-docx
+python-docx
 Pillow
 torch
 scikit-learn
