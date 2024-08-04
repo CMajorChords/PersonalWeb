@@ -1,63 +1,132 @@
 import tiktoken
 import streamlit as st
+from tiktoken import Encoding
+from math import ceil
 
 
-def num_tokens_from_messages(messages, model):
-    """根据消息计算token数量"""
-    model_options = {"gpt 4o": "gpt-4o-ca",
-                     "gpt 4 turbo": "gpt-4-turbo-ca",
-                     "gpt 4": "gpt-4-ca",
-                     "gpt 4o mini": "gpt-4o-mini",
-                     "gpt 3.5 turbo": "gpt-3.5-turbo-ca",
-                     }
-    encoding = tiktoken.encoding_for_model(model_options[model])
-    tokens_per_message = 3
-    tokens_per_name = 3
-    num_tokens = 0
-    for message in messages:
-        num_tokens += tokens_per_message
-        for key, value in message.items():
-            num_tokens += len(encoding.encode(value))
-            if key == "name":
-                num_tokens += tokens_per_name
-    num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
-    return num_tokens
+def count_str_message_tokens(message: dict,
+                             model_encoding: Encoding,
+                             base_tokens: int = 6,
+                             ) -> int:
+    """
+    计算单个文本消息的token数量
+
+    :param message: 单个文本消息
+    :param model_encoding: 模型编码
+    :param base_tokens: 每个message的额外token数量
+    :return: 单个文本消息的token数量
+    """
+    message_tokens = model_encoding.encode(message["content"])
+    return len(message_tokens) + base_tokens
 
 
-def count_prompt_output_token(messages, model):
-    """将最后一条消息作为output，计算token数量"""
+def count_image_message_tokens(message: dict,
+                               base_tokens: int,
+                               tile_tokens: int,
+                               tile_size: int,
+                               max_tokens: int,
+                               ) -> int:
+    """
+    计算单个图片消息的token数量，图片格式应该为PIL.Image
+
+    :param message: 单个图片消息
+    :param base_tokens: 每个message的额外token数量
+    :param tile_tokens: 每个tile的token数量
+    :param tile_size: tile的大小
+    :param max_tokens: 单个图片消息的最大token数量
+    :return: 单个图片消息的token数量
+    """
+    width, height = message["content"].size
+    num_tiles = ceil(width / tile_size) * ceil(height / tile_size)
+    image_tokens = num_tiles * tile_tokens
+    if image_tokens > max_tokens:
+        image_tokens = max_tokens
+    return base_tokens + image_tokens
+
+
+def count_messages_tokens(messages_input: list,
+                          messages_show: list,
+                          message_prompt_template: list,
+                          model: str,
+                          base_tokens_str_message: int = 3,
+                          base_tokens_image_message: int = 85 + 3,
+                          tile_tokens: int = 170,
+                          tile_size: int = 512,
+                          image_max_tokens: int = 1445,
+                          ) -> (int, int):
+    """
+    计算消息的token数量.
+    从message_input中判断消息类型。
+    如果是文本消息，将从messages_input中获取。
+    如果是图片消息，将从messages_show中获取。
+
+    :param messages_input: 输入进client的消息
+    :param messages_show: 显示在UI上的消息
+    :param message_prompt_template: 提示词模板
+    :param model: 模型名称
+    :param base_tokens_str_message: 每个文本message的额外token数量
+    :param base_tokens_image_message: 每个图片message的额外token数量
+    :param tile_tokens: 计算图片tokens时每个tile的token数量
+    :param tile_size: 计算图片tokens时tile的大小
+    :param image_max_tokens: 单个图片消息的最大token数量
+    :return: 消息的token数量
+    """
+    # 配置模型编码
     if model == "gpt 4" or model == "gpt 4o":
         model += "-"
-    encoding = tiktoken.encoding_for_model(model)
-    tokens_per_message = 3
-    tokens_per_name = 3
-    # 计算prompt的token数量
-    prompt_tokens = 0
-    for message in messages[:-1]:
-        prompt_tokens += tokens_per_message
-        for key, value in message.items():
-            try:
-                prompt_tokens += len(encoding.encode(value))
-                if key == "name":
-                    prompt_tokens += tokens_per_name
-            except:
-                pass
-    prompt_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
-    # 计算output的token数量
-    output_tokens = 0
-    output_tokens += tokens_per_message
-    for key, value in messages[-1].items():
-        try:
-            output_tokens += len(encoding.encode(value))
-        except:
-            pass
-    output_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
-    # TODO: 这里应该加一个照片的计费
-    return prompt_tokens, output_tokens
+    model_encoding = tiktoken.encoding_for_model(model)
+    # 计算input tokens
+    messages_input_prompt = messages_input[:-1]
+    messages_show_prompt = messages_show[:-1]
+    prompt_str_tokens, prompt_image_tokens = 0, 0  # 3 tokens for start token, end token and separator token
+    for idx, message in enumerate(messages_input_prompt):
+        if isinstance(message["content"], str):
+            prompt_str_tokens += count_str_message_tokens(message=message,
+                                                          model_encoding=model_encoding,
+                                                          base_tokens=base_tokens_str_message)
+        else:
+            message = messages_show_prompt[idx]
+            prompt_image_tokens += count_image_message_tokens(message=message,
+                                                              base_tokens=base_tokens_image_message,
+                                                              tile_tokens=tile_tokens,
+                                                              tile_size=tile_size,
+                                                              max_tokens=image_max_tokens,
+                                                              )
+    # 计算output tokens
+    message_input_output = messages_input[-1]
+    message_show_output = messages_show[-1]
+    if isinstance(message_input_output["content"], str):
+        output_tokens = count_str_message_tokens(message=message_input_output,
+                                                 model_encoding=model_encoding,
+                                                 base_tokens=base_tokens_str_message)
+    else:
+        output_tokens = count_image_message_tokens(message=message_show_output,
+                                                   base_tokens=base_tokens_image_message,
+                                                   tile_tokens=tile_tokens,
+                                                   tile_size=tile_size,
+                                                   max_tokens=image_max_tokens,
+                                                   )
+    output_tokens += 3
+    # 计算template tokens
+    prompt_str_tokens += count_str_message_tokens(message=message_prompt_template[0],
+                                                  model_encoding=model_encoding,
+                                                  base_tokens=base_tokens_str_message)
+    return prompt_str_tokens, prompt_image_tokens, output_tokens
 
 
-def compute_token_price(messages, model):
-    """计算token价格"""
+def compute_token_price(messages_input: list,
+                        messages_show: list,
+                        message_prompt_template: list,
+                        model: str,
+                        ):
+    """
+    计算本次提问花费
+
+    :param messages_input: 输入进client的消息
+    :param messages_show: 显示在UI上的消息
+    :param message_prompt_template: 提示词模板
+    :param model: 模型名称
+    """
     # 判断message是否为空
     if st.session_state["language"] == "中文":
         label = "计算本次提问花费"
@@ -70,25 +139,31 @@ def compute_token_price(messages, model):
         str_output_token = "Output tokens:"
         str_token_price = "Cost:"
     if st.button(label=label):
-        if messages:
+        if messages_input:
             price_table = {
-                "gpt-4o-ca": (0.02, 0.06),
-                "gpt-4-turbo-ca": (0.04, 0.12),
-                "gpt-4-ca": (0.12, 0.24),
-                "gpt-4o-mini": (0.00105, 0.0042),
-                "gpt-3.5-turbo-ca": (0.001, 0.003),
+                "gpt-4o-ca": (0.02, 0.0289, 0.06),
+                "gpt-4-turbo-ca": (0.04, 0.0578, 0.12),
+                "gpt-4-ca": (0.12, 0.12, 0.24),
+                "gpt-4o-mini": (0.00105, 0.035, 0.0042),
+                "gpt-3.5-turbo-ca": (0.001, 0.001, 0.003),
             }
-            prompt_tokens, output_tokens = count_prompt_output_token(messages, model)
+            prompt_str_tokens, prompt_image_tokens, output_tokens = count_messages_tokens(
+                messages_input=messages_input,
+                messages_show=messages_show,
+                message_prompt_template=message_prompt_template,
+                model=model)
             price = price_table[model]
-            token_price = (prompt_tokens * price[0] + output_tokens * price[1]) / 1000
-            # token price应该保留两位小数
-            st.toast(f"{str_prompt_token}{prompt_tokens}", icon="🪙")
+            token_price = (prompt_str_tokens * price[0] +
+                           prompt_image_tokens * price[1] +
+                           output_tokens * price[2]) / 1000
+            # token price应该保留三位小数
+            st.toast(f"{str_prompt_token}{prompt_str_tokens + prompt_image_tokens}", icon="🪙")
             st.toast(f"{str_output_token}{output_tokens}", icon="🪙")
-            st.toast(f"**{str_token_price}{token_price:.3f}$**", icon="🪙")
+            st.toast(f"**{str_token_price}{token_price:.3f}￥**", icon="🪙")
         else:
             st.toast(f"{str_prompt_token}0", icon="🪙")
             st.toast(f"{str_output_token} 0", icon="🪙")
-            st.toast(f"**{str_token_price} 0$**", icon="🪙")
+            st.toast(f"**{str_token_price} 0￥**", icon="🪙")
 
     # gpt-3.5-turbo-ca	0.001 / 1K Tokens	0.003 / 1K Tokens	支持	Azure openai中转(也属于官方模型的一种)价格便宜, 但是回复的慢一些
     # gpt-3.5-turbo	0.0035 / 1K Tokens	0.0105 / 1K Tokens	支持	默认模型，等于gpt-3.5-turbo-0125

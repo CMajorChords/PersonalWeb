@@ -2,9 +2,8 @@ import streamlit as st
 from openai import OpenAI
 
 
-@st.fragment
 def chat_with_history(authentication: bool,
-                      message_template: str,
+                      message_template: list,
                       model: str,
                       ):
     """
@@ -17,11 +16,11 @@ def chat_with_history(authentication: bool,
     # 设置OpenAI客户端
     client = OpenAI(
         api_key=st.secrets["OPENAI_API_KEY_PAYED"] if authentication else st.secrets["OPENAI_API_KEY_FREE"],
-        base_url="https://api.chatanywhere.cn",  # https://api.chatanywhere.cn/v1https://api.chatanywhere.com.cn
+        base_url="https://api.chatanywhere.cn",  # https://api.chatanywhere.com.cn
     )
 
     # 显示历史消息
-    chat_container = st.container(height=400)
+    chat_container = st.container(height=450)
     for message in st.session_state.messages_show:
         with chat_container.chat_message(message["role"]):
             st.write(message["content"])

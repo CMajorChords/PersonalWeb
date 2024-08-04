@@ -1,5 +1,4 @@
 import streamlit as st
-from openai import OpenAI
 from apps.ai_assistant.select_model import choose_model
 from apps.ai_assistant.compute_token import compute_token_price
 from apps.ai_assistant.process_messages import (process_template_message,
@@ -30,10 +29,6 @@ if check_password(text_label_zn="输入密码解锁更多功能", text_label_en=
     authentication = True
 else:
     authentication = False
-client = OpenAI(
-    api_key=st.secrets["OPENAI_API_KEY_PAYED"] if authentication else st.secrets["OPENAI_API_KEY_FREE"],
-    base_url="https://api.chatanywhere.com.cn",  # https://api.chatanywhere.cn/v1https://api.chatanywhere.com.cn
-)
 
 # UI基础
 write_saying("ai_assistant")
@@ -56,7 +51,10 @@ with col1.container(border=True):
         clear_chat_history()
     with sub_col2:
         process_image_message(authenticated=authentication)
-        compute_token_price(messages=st.session_state.messages_input, model=model_chosen)
+        compute_token_price(messages_input=st.session_state.messages_input,
+                            messages_show=st.session_state.messages_show,
+                            message_prompt_template=message_template,
+                            model=model_chosen)
 
 # 聊天
 chat_with_history(authentication=authentication,

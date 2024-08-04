@@ -13,7 +13,8 @@ def template2message(template_path: str) -> list:
         return [{"role": "system", "content": f.read()}]
 
 
-def process_template_message():
+@st.fragment
+def process_template_message() -> list:
     """
     选择提示词模板
 
