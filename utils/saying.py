@@ -1,6 +1,6 @@
 import streamlit as st
 
-
+@st.cache_resource
 def write_saying(page_name: str):
     """
     在页面中编辑名言

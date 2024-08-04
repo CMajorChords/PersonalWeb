@@ -15,29 +15,48 @@ st.logo("data/image/logo.png", icon_image="data/image/头像无背景.png")
 if "language" not in st.session_state:
     st.session_state["language"] = "中文"
 
-# pages
-if st.session_state["language"] == "中文":
-    page_home = st.Page("apps/home.py", title="fun💤", default=True)
-    page_research_progress = st.Page("apps/research_progress/research_progress.py", title="研究进展")
-    page_technical_notes = st.Page("apps/technical_notes.py", title="技术笔记")
-    page_ai_assistant = st.Page("apps/ai_assistant/ai_assistant.py", title="AI助手")
-    page_data_analysis = st.Page("apps/data_analysis.py", title="数据分析")
-    page_hydrological_model = st.Page("apps/hydrological_model.py", title="水文模型")
-    pages = {"主页": [page_home, ],
-             "博客": [page_research_progress, page_technical_notes, ],
-             "工具": [page_ai_assistant, page_data_analysis, page_hydrological_model, ],
-             }
-else:
-    page_home = st.Page("apps/home.py", title="fun💤", icon="🏠", default=True)
-    page_research_progress = st.Page("apps/research_progress/research_progress.py", title="Research Progress")
-    page_technical_notes = st.Page("apps/technical_notes.py", title="Technical Notes")
-    page_ai_assistant = st.Page("apps/ai_assistant/ai_assistant.py", title="AI Assistant")
-    page_data_analysis = st.Page("apps/data_analysis.py", title="Data Analysis")
-    page_hydrological_model = st.Page("apps/hydrological_model.py", title="Hydro Model")
-    pages = {"Home": [page_home, ],
-             "Blogs": [page_research_progress, page_technical_notes, ],
-             "Tools": [page_ai_assistant, page_data_analysis, page_hydrological_model, ],
-             }
+
+@st.cache_resource
+def get_pages(language: str):
+    if language == "中文":
+        home = st.Page("apps/home.py", title="fun💤", default=True)
+        research_progress = st.Page("apps/research_progress/research_progress.py", title="研究进展")
+        technical_notes = st.Page("apps/technical_notes.py", title="技术笔记")
+        ai_assistant = st.Page("apps/ai_assistant/ai_assistant.py", title="AI助手")
+        data_analysis = st.Page("apps/data_analysis.py", title="数据分析")
+        hydrological_model = st.Page("apps/hydrological_model.py", title="水文模型")
+        pages_dict = {"主页": [home, ],
+                      "博客": [research_progress, technical_notes, ],
+                      "工具": [ai_assistant, data_analysis, hydrological_model, ],
+                      }
+    else:
+        home = st.Page("apps/home.py", title="fun💤", icon="🏠", default=True)
+        research_progress = st.Page("apps/research_progress/research_progress.py", title="Research Progress")
+        technical_notes = st.Page("apps/technical_notes.py", title="Technical Notes")
+        ai_assistant = st.Page("apps/ai_assistant/ai_assistant.py", title="AI Assistant")
+        data_analysis = st.Page("apps/data_analysis.py", title="Data Analysis")
+        hydrological_model = st.Page("apps/hydrological_model.py", title="Hydro Model")
+        pages_dict = {"Home": [home, ],
+                      "Blogs": [research_progress, technical_notes, ],
+                      "Tools": [ai_assistant, data_analysis, hydrological_model, ],
+                      }
+    return (home,
+            research_progress,
+            technical_notes,
+            ai_assistant,
+            data_analysis,
+            hydrological_model,
+            pages_dict)
+
+
+(page_home,
+ page_research_progress,
+ page_technical_notes,
+ page_ai_assistant,
+ page_data_analysis,
+ page_hydrological_model,
+ pages
+ ) = get_pages(st.session_state["language"])
 
 # sidebar
 if st.session_state["language"] == "中文":

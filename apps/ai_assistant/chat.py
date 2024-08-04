@@ -20,7 +20,7 @@ def chat_with_history(authentication: bool,
     )
 
     # 显示历史消息
-    chat_container = st.container(height=450)
+    chat_container = st.container(height=400)
     for message in st.session_state.messages_show:
         with chat_container.chat_message(message["role"]):
             st.write(message["content"])

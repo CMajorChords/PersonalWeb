@@ -1,20 +1,25 @@
 import streamlit as st
+
 st.balloons()
 
 # 头像
 col = st.columns(7)
 col[3].image("data/image/头像无背景.png", use_column_width=True)
 
-# 自我介绍
-with st.container(border=True):
-    if st.session_state["language"] == "English":
+
+@st.cache_resource
+def self_introduction(language: str):
+    if language == "中文":
         st.header("About me", anchor=False)
-        with open("data/markdown/about_me_EN.md", "r", encoding="utf-8") as f:
-            st.markdown(f.read())
-    elif st.session_state["language"] == "中文":
-        st.header("关于我", anchor=False)
         with open("data/markdown/about_me_ZN.md", "r", encoding="utf-8") as f:
             st.markdown(f.read())
+    else:
+        st.header("关于我", anchor=False)
+        with open("data/markdown/about_me_EN.md", "r", encoding="utf-8") as f:
+            st.markdown(f.read())
+
+
+self_introduction(language=st.session_state["language"])
 
 # 联系我、反馈和建议、请我喝咖啡
 col1, col2, col3 = st.columns(3)
@@ -48,11 +53,17 @@ else:
             st.markdown("A penny is enough,thank you🥰")
             st.image("data/image/收款码.png")
 
+
 # 一些与研究方向相关的图片
-with st.container(border=True):
-    col1, col2, col3 = st.columns(3)
-    col1.image("data/image/集成学习.png", use_column_width=True)
-    col2.image("data/image/复合图.png", use_column_width=True)
-    col3.image("data/image/地图.png", use_column_width=True)
-with st.popover("水循环" if st.session_state["language"] == "中文" else "Water Cycle"):
-    st.image("data/image/水循环英文版.png", use_column_width=True)
+@st.cache_resource
+def show_image(language: str):
+    with st.container(border=True):
+        col_1, col_2, col_3 = st.columns(3)
+        col_1.image("data/image/集成学习.png", use_column_width=True)
+        col_2.image("data/image/复合图.png", use_column_width=True)
+        col_3.image("data/image/地图.png", use_column_width=True)
+    with st.popover("水循环" if language == "中文" else "Water Cycle"):
+        st.image("data/image/水循环英文版.png", use_column_width=True)
+
+
+show_image(language=st.session_state["language"])
