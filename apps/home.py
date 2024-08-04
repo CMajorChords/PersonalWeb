@@ -2,13 +2,12 @@ import streamlit as st
 
 st.balloons()
 
-# 头像
-col = st.columns(7)
-col[3].image("data/image/头像无背景.png", use_column_width=True)
-
 
 @st.cache_resource
 def self_introduction(language: str):
+    # 头像
+    col = st.columns(7)
+    col[3].image("data/image/头像无背景.png", use_column_width=True)
     if language == "中文":
         st.header("About me", anchor=False)
         with open("data/markdown/about_me_ZN.md", "r", encoding="utf-8") as f:
