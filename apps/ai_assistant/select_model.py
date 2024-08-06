@@ -10,8 +10,8 @@ def choose_model(authenticated: bool):
     """
     # 模型选择
     if authenticated:
-        model_options = {"gpt 4o": "gpt-4o-ca",
-                         "gpt 4o mini": "gpt-4o-mini",
+        model_options = {"gpt 4o mini": "gpt-4o-mini",
+                         "gpt 4o": "gpt-4o-ca",
                          "gpt 4 turbo": "gpt-4-turbo-ca",
                          "gpt 4": "gpt-4-ca",
                          # "gpt 3.5 turbo": "gpt-3.5-turbo",  # "gpt-3.5-turbo-ca",

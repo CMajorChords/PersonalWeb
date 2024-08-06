@@ -138,7 +138,7 @@ def compute_token_price(messages_input: list,
         str_prompt_token = "Input tokens:"
         str_output_token = "Output tokens:"
         str_token_price = "Cost:"
-    if st.button(label=label):
+    if st.button(label=label, use_container_width=True):
         if messages_input:
             price_table = {
                 "gpt-4o-ca": (0.02, 0.0289, 0.06),

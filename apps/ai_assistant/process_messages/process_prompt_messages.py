@@ -25,12 +25,14 @@ def process_template_message() -> list:
         template_options = {"逻辑推理": path + "Logical Reasoning.txt",
                             "文献阅读": path + "Literature Analysis.txt",
                             "科学研究": path + "Scientific Research.txt",
+                            "Python编程": path + "Python Programming.txt",
                             }
         template_select_box_label = "加强AI能力"
     else:
         template_options = {"Logical Reasoning": path + "Logical Reasoning.txt",
                             "Literature Analysis": path + "Literature Analysis.txt",
                             "scientific research": path + "Scientific Research.txt",
+                            "Python Programming": path + "Python Programming.txt",
                             }
         template_select_box_label = "Enhance AI capabilities"
     template_chosen = st.selectbox(label=template_select_box_label,

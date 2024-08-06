@@ -4,7 +4,8 @@ from apps.ai_assistant.compute_token import compute_token_price
 from apps.ai_assistant.process_messages import (process_template_message,
                                                 process_document_message,
                                                 process_image_message,
-                                                clear_chat_history)
+                                                clear_chat_history,
+                                                clear_last_message, )
 from utils import write_saying, check_password
 from apps.ai_assistant.chat import chat_with_history
 
@@ -48,9 +49,17 @@ with col1.container(border=True):
     sub_col1, sub_col2 = st.columns(2)
     with sub_col1:
         process_document_message(authenticated=authentication)
-        clear_chat_history()
     with sub_col2:
         process_image_message(authenticated=authentication)
+
+# 设置聊天消息控制
+with col1.container(border=True):
+    sub_col1, sub_col2, sub_col3 = st.columns((1, 1, 1))
+    with sub_col1:
+        clear_chat_history()
+    with sub_col2:
+        clear_last_message()
+    with sub_col3:
         compute_token_price(messages_input=st.session_state.messages_input,
                             messages_show=st.session_state.messages_show,
                             message_prompt_template=message_template,
