@@ -11,6 +11,7 @@ def choose_model(authenticated: bool):
     # 模型选择
     if authenticated:
         model_options = {"gpt 4o mini": "gpt-4o-mini",
+                         "gpt 4o(long output)": "gpt-4o-2024-08-06",
                          "gpt 4o": "gpt-4o-ca",
                          "gpt 4 turbo": "gpt-4-turbo-ca",
                          "gpt 4": "gpt-4-ca",

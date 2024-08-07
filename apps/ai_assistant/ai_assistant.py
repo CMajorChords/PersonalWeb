@@ -34,7 +34,7 @@ else:
 # UI基础
 write_saying("ai_assistant")
 st.subheader("fun💤 AI", anchor=False)
-col1, col2 = st.columns((3, 1))
+col1, col2 = st.columns((5, 2))
 
 # ai设置
 with col2.container(border=True):

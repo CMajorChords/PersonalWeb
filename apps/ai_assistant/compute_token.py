@@ -143,6 +143,7 @@ def compute_token_price(messages_input: list,
             price_table = {
                 "gpt-4o-ca": (0.02, 0.0289, 0.06),
                 "gpt-4-turbo-ca": (0.04, 0.0578, 0.12),
+                "gpt-4o-2024-08-06": (0.0175, 0.0175, 0.07),
                 "gpt-4-ca": (0.12, 0.12, 0.24),
                 "gpt-4o-mini": (0.00105, 0.035, 0.0042),
                 "gpt-3.5-turbo-ca": (0.001, 0.001, 0.003),
@@ -187,3 +188,4 @@ def compute_token_price(messages_input: list,
     # gpt-4-turbo-ca	0.04 / 1K Tokens + 0.0578*图片个数[3]	0.12 / 1K Tokens	支持	Azure openai中转 对标gpt-4-turbo(也属于官方模型的一种)价格便宜, 但是回复的慢一些
     # gpt-4o-ca	0.02 / 1K Tokens + 0.0289*图片个数[2]	0.06 / 1K Tokens	支持	Azure openai中转 对标gpt-4o(也属于官方模型的一种)价格便宜
     # gpt-3.5-turbo-instruct	0.0105 / 1K Tokens	0.014 / 1K Tokens	支持	Completions模型 用于文本生成，提供准确的自然语言处理模型一般人用不上
+    # gpt-4o-2024-08-06	0.0175 / 1K Tokens	0.07 / 1K Tokens	Openai 2024-08-06出的gpt-4o模型 支持128k输入,16k输出
